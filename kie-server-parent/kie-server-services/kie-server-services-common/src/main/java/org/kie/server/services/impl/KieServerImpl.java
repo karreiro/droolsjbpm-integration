@@ -379,6 +379,9 @@ public class KieServerImpl implements KieServer {
     }
 
     public ServiceResponse<Void> disposeContainer(String containerId) {
+        System.out.println("---------------------------------------------->> ini");
+
+        System.out.println("---------------------------------------------->> end");
         List<Message> messages = new CopyOnWriteArrayList<Message>();
         try {
             KieContainerInstanceImpl kci = context.unregisterContainer(containerId);

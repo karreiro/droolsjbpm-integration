@@ -205,8 +205,10 @@ public class KieServicesClientImpl extends AbstractKieServicesClientImpl impleme
     @Override
     public ServiceResponse<Void> disposeContainer(String id) {
         if( config.isRest() ) {
+            System.out.println("--->> !! requesting");
             return makeHttpDeleteRequestAndCreateServiceResponse( loadBalancer.getUrl() + "/containers/" + id, Void.class );
         } else {
+            System.out.println("--->> !! scripting");
             CommandScript script = new CommandScript(Collections.singletonList((KieServerCommand) new DisposeContainerCommand(id)));
             ServiceResponse<Void> response = (ServiceResponse<Void>) executeJmsCommand(script, null, null, id).getResponses().get(0);
             return getResponseOrNullIfNoResponse(response);

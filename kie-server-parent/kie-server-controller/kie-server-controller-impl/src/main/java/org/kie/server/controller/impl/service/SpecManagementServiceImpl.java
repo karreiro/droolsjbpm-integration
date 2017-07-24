@@ -327,7 +327,9 @@ public class SpecManagementServiceImpl implements SpecManagementService {
 
         templateStorage.update( serverTemplate );
 
+        System.out.println("--->> !! start");
         List<Container> containers = kieServerInstanceManager.stopContainer( serverTemplate, containerSpec );
+        System.out.println("--->> !! end");
 
         notificationService.notify( serverTemplate, containerSpec, containers );
     }
