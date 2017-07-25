@@ -139,10 +139,12 @@ public class RuleCapabilitiesServiceImplTest extends AbstractServiceImplTest {
         ruleCapabilitiesService.upgradeContainer(containerSpec, upgradeTo);
 
         verify(kieServerInstanceManager, times(1)).upgradeContainer(any(ServerTemplate.class), any(ContainerSpec.class));
+//        verify(containerSpec).set
 
         ServerTemplate updated = specManagementService.getServerTemplate(serverTemplate.getId());
 
         Collection<ContainerSpec> containerSpecs = updated.getContainersSpec();
+
         assertNotNull(containerSpecs);
         assertEquals(1, containerSpecs.size());
 
