@@ -214,29 +214,35 @@ public class KieServerInstanceManager {
     }
 
     public List<Container> getContainers(final ServerTemplate serverTemplate, final ContainerSpec containerSpec) {
+        final RemoteKieServerOperation<Void> operation = getContainersRemoteOperation(serverTemplate,
+                                                                                      containerSpec);
 
-        return callRemoteKieServerOperation(serverTemplate, containerSpec, new RemoteKieServerOperation<Void>(){
+        return callRemoteKieServerOperation(serverTemplate,
+                                            containerSpec,
+                                            operation);
+    }
+
+    RemoteKieServerOperation<Void> getContainersRemoteOperation(final ServerTemplate serverTemplate,
+                                                                final ContainerSpec containerSpec) {
+        return new RemoteKieServerOperation<Void>() {
             @Override
-            public Void doOperation(KieServicesClient client, Container container) {
+            public Void doOperation(KieServicesClient client,
+                                    Container container) {
+                final ServiceResponse<KieContainerResource> response = client.getContainerInfo(containerSpec.getId());
+                final KieContainerResource containerResource = response.getResult();
 
-                if (containerSpec.getStatus().equals(KieContainerStatus.STARTED)) {
-                    ServiceResponse<KieContainerResource> response = client.getContainerInfo(containerSpec.getId());
-                    if (response.getType().equals(ServiceResponse.ResponseType.SUCCESS)) {
-                        KieContainerResource containerResource = response.getResult();
-
-                        container.setContainerSpecId(containerResource.getContainerId());
-                        container.setContainerName(containerResource.getContainerId());
-                        container.setResolvedReleasedId(containerResource.getResolvedReleaseId() == null ? containerResource.getReleaseId() : containerResource.getResolvedReleaseId());
-                        container.setServerTemplateId(serverTemplate.getId());
-                        container.setStatus(containerResource.getStatus());
-                        container.setMessages(containerResource.getMessages());
-
-                    }
+                if (response.getType().equals(ServiceResponse.ResponseType.SUCCESS)) {
+                    container.setContainerSpecId(containerResource.getContainerId());
+                    container.setContainerName(containerResource.getContainerId());
+                    container.setResolvedReleasedId(containerResource.getResolvedReleaseId() == null ? containerResource.getReleaseId() : containerResource.getResolvedReleaseId());
+                    container.setServerTemplateId(serverTemplate.getId());
+                    container.setStatus(containerResource.getStatus());
+                    container.setMessages(containerResource.getMessages());
                 }
 
                 return null;
             }
-        });
+        };
     }
 
     public List<Container> getContainers(ServerInstanceKey serverInstanceKey) {
