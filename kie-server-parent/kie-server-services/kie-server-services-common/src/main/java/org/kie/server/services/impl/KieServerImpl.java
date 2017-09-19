@@ -778,16 +778,7 @@ public class KieServerImpl implements KieServer {
                 messages.add(new Message(Severity.INFO, "Release id successfully updated for container " + id));
                 return new ServiceResponse<ReleaseId>(ServiceResponse.ResponseType.SUCCESS, "Release id successfully updated.", kci.getResource().getReleaseId());
             } else {
-                // no container yet, attempt to create it
-                KieContainerResource containerResource = new KieContainerResource(id, releaseId, KieContainerStatus.STARTED);
-
-                ServiceResponse<KieContainerResource> response = createContainer(id, containerResource);
-                if (response.getType().equals(ResponseType.SUCCESS)) {
-                    kci = context.getContainer(id);
-                    return new ServiceResponse<ReleaseId>(ServiceResponse.ResponseType.SUCCESS, "Release id successfully updated.", kci.getResource().getReleaseId());
-                } else {
-                    return new ServiceResponse<ReleaseId>(ServiceResponse.ResponseType.FAILURE, "Container " + id + " is not instantiated.");
-                }
+                return new ServiceResponse<ReleaseId>(ServiceResponse.ResponseType.FAILURE, "Container " + id + " is not instantiated.");
             }
         } catch (Exception e) {
             if (messages != null) {
