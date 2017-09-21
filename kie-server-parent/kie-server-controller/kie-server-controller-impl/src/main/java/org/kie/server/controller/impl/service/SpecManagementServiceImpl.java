@@ -326,12 +326,9 @@ public class SpecManagementServiceImpl implements SpecManagementService {
                                                  final ServerTemplate serverTemplate,
                                                  final ContainerSpec containerSpec) {
 
-        kieServerInstanceManager.stopContainer(serverTemplate, containerSpec);
-
         containerSpec.getConfigs().put(capability, processConfig);
-        containerSpec.setStatus(KieContainerStatus.STARTED);
 
-        return kieServerInstanceManager.startContainer(serverTemplate, containerSpec);
+        return kieServerInstanceManager.upgradeContainer(serverTemplate, containerSpec);
     }
 
     List<Container> updateContainerRuleConfig(final RuleConfig ruleConfig,

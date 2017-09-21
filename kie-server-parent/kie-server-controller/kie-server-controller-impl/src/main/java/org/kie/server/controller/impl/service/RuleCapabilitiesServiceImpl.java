@@ -141,7 +141,7 @@ public class RuleCapabilitiesServiceImpl implements RuleCapabilitiesService {
         if (containerSpec.getStatus() == KieContainerStatus.STARTED) {
             containers = kieServerInstanceManager.upgradeContainer(serverTemplate, containerSpec);
         } else {
-            containers = kieServerInstanceManager.upgradeAndStartContainer(serverTemplate, containerSpec);
+            containers = kieServerInstanceManager.startContainer(serverTemplate, containerSpec);
         }
 
         containerSpec.setStatus(KieContainerStatus.STARTED);
